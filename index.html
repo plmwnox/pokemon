@@ -3,726 +3,970 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokémon TCG Store</title>
-    <!-- Incluindo a biblioteca Tailwind CSS para um design moderno e responsivo -->
+    <title>Pokémon TCG - Loja Oficial</title>
+    <meta name="description" content="Descubra a maior coleção de cartas Pokémon TCG. Expansões exclusivas, cartas raras e tudo para sua batalha perfeita.">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Importação da fonte Pokémon Solid. Certifique-se de que este arquivo .ttf esteja na mesma pasta do seu index.html. */
-        @font-face {
-            font-family: 'Pokemon Solid';
-            src: url('pokemon-solid-cdnfonts.zip/Pokemon Solid.ttf') format('truetype');
+        :root {
+            --pokemon-primary: #1a365d;
+            --pokemon-secondary: #e53e3e;
+            --pokemon-accent: #ffd700;
+            --pokemon-light: #f7fafc;
+            --pokemon-gray: #edf2f7;
+            --pokemon-dark: #2d3748;
         }
 
-        /* Cores baseadas na paleta da marca Pokémon */
-        :root {
-            --pokemon-yellow: #FFDE00;
-            --pokemon-blue: #3B5CA8;
-            --pokemon-red: #B50000;
-            --main-bg-color: #f7f7f7;
-            --card-bg: #ffffff;
-            --shadow-light: rgba(0, 0, 0, 0.1);
-            --shadow-strong: rgba(0, 0, 0, 0.2);
+        * {
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            font-family: sans-serif;
-            background-color: var(--main-bg-color);
+            background-color: var(--pokemon-light);
+            line-height: 1.6;
         }
 
-        /* Estilo para a logo e a barra de navegação */
-        header {
-            background-color: var(--pokemon-blue);
-            border-bottom: 5px solid var(--pokemon-red);
-            padding: 1rem 2rem;
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Header Styles */
+        .header-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: linear-gradient(135deg, var(--pokemon-primary) 0%, #2c5282 100%);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
-        .header-content img.logo {
-            max-height: 80px;
-            object-fit: contain;
-        }
-        
-        /* Estilo para o campo de busca */
-        .search-bar {
+        .nav-link {
             position: relative;
-        }
-        
-        /* Estilo para o botão do carrinho */
-        .cart-btn {
-            background-color: var(--pokemon-red);
-            color: white;
-            border-radius: 9999px;
+            transition: all 0.3s ease;
             padding: 0.5rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            border-radius: 0.5rem;
         }
 
-        .cart-btn:hover {
-            background-color: #d11a1a;
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
-        /* Estilo para a seção de boas-vindas */
-        .hero-section {
-            background-image: url('https://tcg.pokemon.com/pt-br/img/home/hero-carousel-desktop-en-US-03292023.jpg');
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: var(--pokemon-accent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        /* Hero Section */
+        .hero-carousel {
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            height: 400px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-content {
             text-align: center;
             color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        /* Estilo para o título da seção */
-        .section-title {
-            font-family: 'Pokemon Solid', sans-serif;
-            color: var(--pokemon-blue);
-            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.7);
-        }
-
-        /* Estilo do cartão de produto, imitando o visual das cartas TCG */
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px var(--shadow-light);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            overflow: hidden;
-            flex-shrink: 0;
-            width: 300px; /* Largura fixa para cada carta no carrossel */
-            margin-right: 2rem;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px var(--shadow-strong);
-        }
-
-        .card-image-container {
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .card-image {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        
-        /* Estilo dos botões */
-        .btn-primary {
-            background-color: var(--pokemon-blue);
-            color: white;
-            border: 2px solid var(--pokemon-blue);
-            transition: background-color 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #4c6eaf;
-        }
-        
-        .btn-secondary {
-            background-color: var(--pokemon-red);
-            color: white;
-            border: 2px solid var(--pokemon-red);
-            transition: background-color 0.3s ease;
-        }
-        .btn-secondary:hover {
-            background-color: #d11a1a;
-        }
-        .btn-carousel {
-            background-color: var(--pokemon-blue);
-            color: white;
-            border-radius: 9999px;
-            width: 4rem;
-            height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 6px var(--shadow-strong);
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
             z-index: 10;
+            max-width: 600px;
+            padding: 2rem;
         }
 
-        .btn-carousel:hover {
-            background-color: #4c6eaf;
-            transform: translateY(-50%) scale(1.1);
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(26, 54, 93, 0.8), rgba(44, 82, 130, 0.6));
+            z-index: 5;
         }
 
-        /* Estilo do carrossel */
-        .carousel-container {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            line-height: 1.1;
         }
-        
-        .cards-carousel {
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .hero-cta {
+            background: linear-gradient(135deg, var(--pokemon-accent) 0%, #ffed4e 100%);
+            color: var(--pokemon-dark);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Navigation Dots */
+        .hero-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 1rem;
-            /* Estiliza a barra de rolagem */
-            scrollbar-width: thin;
-            scrollbar-color: var(--pokemon-blue) var(--main-bg-color);
-        }
-        .cards-carousel::-webkit-scrollbar {
-            height: 8px;
-        }
-        .cards-carousel::-webkit-scrollbar-track {
-            background: var(--main-bg-color);
-            border-radius: 10px;
-        }
-        .cards-carousel::-webkit-scrollbar-thumb {
-            background-color: var(--pokemon-blue);
-            border-radius: 10px;
-            border: 2px solid var(--main-bg-color);
+            gap: 0.5rem;
+            z-index: 15;
         }
 
-        /* Estilo do sistema de avaliação */
-        .rating {
-            display: inline-block;
-            direction: rtl;
+        .hero-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .rating input {
-            display: none;
+
+        .hero-dot.active {
+            background-color: var(--pokemon-accent);
+            transform: scale(1.2);
         }
-        .rating label {
-            color: #ccc;
-            font-size: 1.5rem;
-            padding: 0 0.1rem;
+
+        /* Section Styles */
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--pokemon-primary);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pokemon-accent), var(--pokemon-secondary));
+            border-radius: 2px;
+        }
+
+        /* Card Styles */
+        .product-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid var(--pokemon-gray);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        /* News Card Styles */
+        .news-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pokemon-primary) 0%, #2c5282 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
             cursor: pointer;
         }
-        .rating input:checked ~ label,
-        .rating label:hover,
-        .rating label:hover ~ label {
-            color: var(--pokemon-yellow);
-        }
-        
-        /* Estilo para o rodapé */
-        footer {
-            background-color: var(--pokemon-blue);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-            border-top: 5px solid var(--pokemon-red);
-            margin-top: 2rem;
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 54, 93, 0.3);
         }
 
-        /* Estilo para o modal de mensagem */
-        .message-modal {
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--pokemon-secondary) 0%, #c53030 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(229, 62, 62, 0.3);
+        }
+
+        /* Rating Stars */
+        .rating {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .star {
+            color: var(--pokemon-accent);
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--pokemon-primary) 0%, #2c5282 100%);
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--pokemon-primary);
+            z-index: 100;
+            padding: 2rem;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .desktop-nav {
+                display: none;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body>
+    <!-- Header -->
+    <header class="header-sticky">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-4">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <img src="International_Pokémon_logo.svg.png-49c23c3f-190a-4291-af65-ba1ff8320faf" alt="Pokémon TCG" class="h-12 w-auto">
+                </div>
 
-    <!-- Estrutura principal do site -->
-    <header>
-        <div class="header-content">
-            <img class="logo" src="International_Pokémon_logo.svg.png-49c23c3f-190a-4291-af65-ba1ff8320faf" alt="Logo Pokémon">
-            <div class="search-bar">
-                <input type="text" id="search-input" placeholder="Buscar por cartas..." class="px-4 py-2 rounded-full border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <!-- Desktop Navigation -->
+                <nav class="desktop-nav hidden md:flex items-center space-x-1">
+                    <a href="#inicio" class="nav-link text-white">Início</a>
+                    <a href="#expansoes" class="nav-link text-white">Expansões</a>
+                    <a href="#cartas" class="nav-link text-white">Cartas</a>
+                    <a href="#como-jogar" class="nav-link text-white">Como Jogar</a>
+                    <a href="#novidades" class="nav-link text-white">Novidades</a>
+                    <a href="#onde-comprar" class="nav-link text-white">Onde Comprar</a>
+                </nav>
+
+                <!-- Search and Cart -->
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:block">
+                        <input type="text" id="search-input" placeholder="Buscar cartas..." 
+                               class="px-4 py-2 rounded-full border-0 bg-white/10 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-yellow-400 backdrop-blur-sm">
+                    </div>
+                    <button id="cart-btn" class="flex items-center space-x-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-all duration-300">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h9m-9 0V19a2 2 0 002 2h9a2 2 0 002-2v-6"></path>
+                        </svg>
+                        <span class="text-white font-medium">Carrinho</span>
+                        <span id="cart-count" class="bg-yellow-400 text-gray-900 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">0</span>
+                    </button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
-            <button id="cart-btn" class="cart-btn">
-                <span>Carrinho</span>
-                <span id="cart-count" class="bg-white text-blue-800 rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm">0</span>
-            </button>
         </div>
     </header>
 
-    <main class="flex-grow p-8">
-        
-        <!-- Seção de Boas-Vindas -->
-        <div class="hero-section rounded-lg">
-            <h1 class="text-5xl lg:text-7xl font-bold section-title text-white">Bem-vindo à Loja Pokémon TCG!</h1>
-            <p class="mt-4 text-xl font-bold">Encontre as cartas que faltam na sua coleção.</p>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <div class="flex justify-between items-center mb-8">
+            <img src="International_Pokémon_logo.svg.png-49c23c3f-190a-4291-af65-ba1ff8320faf" alt="Pokémon TCG" class="h-10 w-auto">
+            <button id="close-mobile-menu" class="text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
-        
-        <!-- Vitrine de Produtos - Visível por padrão -->
-        <div id="product-list" class="page-view">
-            <h2 class="text-4xl lg:text-5xl font-bold text-center mb-8 section-title">Coleção de Cartas</h2>
-            
-            <div class="carousel-container">
-                <button id="prev-btn" class="btn-carousel left-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="32" height="32">
-                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                    </svg>
-                </button>
-                <div id="cards-container" class="cards-carousel">
-                    <!-- Cartas serão injetadas aqui via JavaScript -->
-                </div>
-                <button id="next-btn" class="btn-carousel right-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="32" height="32">
-                        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
-                    </svg>
-                </button>
-            </div>
+        <nav class="flex flex-col space-y-4">
+            <a href="#inicio" class="text-white text-xl py-2">Início</a>
+            <a href="#expansoes" class="text-white text-xl py-2">Expansões</a>
+            <a href="#cartas" class="text-white text-xl py-2">Cartas</a>
+            <a href="#como-jogar" class="text-white text-xl py-2">Como Jogar</a>
+            <a href="#novidades" class="text-white text-xl py-2">Novidades</a>
+            <a href="#onde-comprar" class="text-white text-xl py-2">Onde Comprar</a>
+        </nav>
+        <div class="mt-8">
+            <input type="text" placeholder="Buscar cartas..." 
+                   class="w-full px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-yellow-400">
         </div>
+    </div>
 
-        <!-- Carrinho de Compras - Escondido por padrão -->
-        <div id="cart-view" class="page-view hidden">
-            <h2 class="text-4xl lg:text-5xl font-bold text-center mb-8 section-title">Seu Carrinho</h2>
-            <div id="cart-items" class="bg-white p-6 rounded-xl shadow-lg mb-6">
-                <!-- Itens do carrinho serão injetados aqui via JavaScript -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section id="inicio" class="mb-16">
+            <div class="hero-carousel">
+                <!-- Slide 1 -->
+                <div class="hero-slide active" style="background-image: url('https://tcg.pokemon.com/pt-br/img/home/hero-carousel-desktop-en-US-03292023.jpg')">
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content">
+                        <h1 class="hero-title">Descubra as Novas Expansões</h1>
+                        <p class="hero-subtitle">Explore cartas exclusivas e construa decks imbatíveis com as últimas expansões do Pokémon TCG</p>
+                        <button class="hero-cta">Explorar Agora</button>
+                    </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="hero-slide" style="background-image: url('https://assets.pokemon.com/static-assets/content-assets/cms2/img/trading-card-game/_tiles/tcg-sword-shield-brilliant-stars-169-en.jpg')">
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content">
+                        <h1 class="hero-title">Construa Sua Coleção Perfeita</h1>
+                        <p class="hero-subtitle">Encontre cartas raras, holográficas e edições limitadas para completar sua coleção dos sonhos</p>
+                        <button class="hero-cta">Ver Coleção</button>
+                    </div>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="hero-slide" style="background-image: url('https://assets.pokemon.com/static-assets/content-assets/cms2/img/trading-card-game/series/swsh12/swsh12-169-en.jpg')">
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content">
+                        <h1 class="hero-title">Batalhe com Estilo</h1>
+                        <p class="hero-subtitle">Domine as estratégias competitivas e torne-se um mestre Pokémon com nossos produtos premium</p>
+                        <button class="hero-cta">Começar Batalha</button>
+                    </div>
+                </div>
+                
+                <!-- Navigation Dots -->
+                <div class="hero-dots">
+                    <div class="hero-dot active" data-slide="0"></div>
+                    <div class="hero-dot" data-slide="1"></div>
+                    <div class="hero-dot" data-slide="2"></div>
+                </div>
             </div>
-            <div class="flex justify-between items-center text-xl font-bold my-4">
-                <span>Total:</span>
-                <span id="cart-total" class="text-2xl">R$ 0,00</span>
-            </div>
-            <div class="flex justify-between mt-6">
-                <button id="back-to-shop-btn" class="btn-primary py-3 px-6 rounded-full font-bold">Continuar Comprando</button>
-                <button id="checkout-btn" class="btn-secondary py-3 px-6 rounded-full font-bold">Finalizar Compra</button>
-            </div>
-        </div>
+        </section>
 
-        <!-- Formulário de Pagamento - Escondido por padrão -->
-        <div id="checkout-view" class="page-view hidden">
-            <h2 class="text-4xl lg:text-5xl font-bold text-center mb-8 section-title">Dados para Pagamento</h2>
-            <form id="checkout-form" class="bg-white p-6 rounded-xl shadow-lg">
-                <div class="mb-4">
-                    <label for="name" class="block text-gray-700 font-bold mb-2">Nome Completo</label>
-                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border rounded-md" required>
-                </div>
-                <div class="mb-4">
-                    <label for="email" class="block text-gray-700 font-bold mb-2">E-mail</label>
-                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-md" required>
-                </div>
-                <div class="mb-4">
-                    <label for="address" class="block text-gray-700 font-bold mb-2">Endereço</label>
-                    <input type="text" id="address" name="address" class="w-full px-4 py-2 border rounded-md" required>
-                </div>
-                <div class="mb-4">
-                    <label for="card-number" class="block text-gray-700 font-bold mb-2">Número do Cartão</label>
-                    <input type="text" id="card-number" name="card-number" class="w-full px-4 py-2 border rounded-md" required>
-                </div>
-                <div class="flex justify-between mt-6">
-                    <button type="button" id="back-to-cart-btn" class="btn-primary py-3 px-6 rounded-full font-bold">Voltar</button>
-                    <button type="submit" class="btn-secondary py-3 px-6 rounded-full font-bold">Efetuar Pagamento</button>
-                </div>
-            </form>
-            <div id="success-message" class="hidden text-center mt-8 p-6 bg-green-200 text-green-800 rounded-lg shadow-lg">
-                <h2 class="text-2xl font-bold mb-2">Compra Finalizada!</h2>
-                <p>Obrigado por sua compra! Você receberá um e-mail de confirmação em breve.</p>
+        <!-- Products Section -->
+        <section id="cartas" class="mb-16">
+            <h2 class="section-title">Coleção Premium</h2>
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Products will be loaded here -->
             </div>
-        </div>
+        </section>
+
+        <!-- News Section -->
+        <section id="novidades" class="mb-16">
+            <h2 class="section-title">Últimas Novidades</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <article class="news-card">
+                    <img src="https://assets.pokemon.com/static-assets/content-assets/cms2/img/trading-card-game/_tiles/news-paldean-fates-169-en.jpg" alt="Notícia 1" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800">Nova Expansão Paldean Fates</h3>
+                        <p class="text-gray-600 mb-4">Descubra as cartas especiais da região de Paldea com artes exclusivas e Pokémon Shiny.</p>
+                        <button class="btn-primary">Leia Mais</button>
+                    </div>
+                </article>
+                
+                <article class="news-card">
+                    <img src="https://assets.pokemon.com/static-assets/content-assets/cms2/img/trading-card-game/_tiles/news-worlds-2023-169-en.jpg" alt="Notícia 2" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800">Campeonato Mundial 2024</h3>
+                        <p class="text-gray-600 mb-4">Acompanhe os melhores jogadores do mundo na competição mais prestigiosa do Pokémon TCG.</p>
+                        <button class="btn-primary">Leia Mais</button>
+                    </div>
+                </article>
+                
+                <article class="news-card">
+                    <img src="https://assets.pokemon.com/static-assets/content-assets/cms2/img/trading-card-game/_tiles/news-pokemon-go-169-en.jpg" alt="Notícia 3" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800">Pokémon GO TCG</h3>
+                        <p class="text-gray-600 mb-4">A colaboração entre Pokémon GO e TCG traz cartas especiais com seus Pokémon favoritos.</p>
+                        <button class="btn-primary">Leia Mais</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section class="mb-16 bg-white rounded-2xl p-8 shadow-lg">
+            <h2 class="section-title">Junte-se à Comunidade</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Torneios Locais</h3>
+                    <p class="text-gray-600">Participe de eventos em sua região e conheça outros treinadores.</p>
+                </div>
+                
+                <div class="p-6">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Fóruns Online</h3>
+                    <p class="text-gray-600">Discuta estratégias e troque dicas com a comunidade global.</p>
+                </div>
+                
+                <div class="p-6">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Guias e Tutoriais</h3>
+                    <p class="text-gray-600">Aprenda as regras e domine as estratégias avançadas do jogo.</p>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Loja Pokémon TCG. Todos os direitos reservados.</p>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <img src="International_Pokémon_logo.svg.png-49c23c3f-190a-4291-af65-ba1ff8320faf" alt="Pokémon TCG" class="h-12 w-auto mb-4">
+                    <p class="text-gray-300">A loja oficial do Pokémon Trading Card Game no Brasil.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Produtos</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Expansões</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Cartas Individuais</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Decks Temáticos</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Acessórios</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Suporte</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Como Jogar</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Regras Oficiais</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Comunidade</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Torneios</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Eventos</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Fóruns</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Redes Sociais</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-600 pt-8 text-center text-gray-300">
+                <p>&copy; 2025 Pokémon TCG Store. Todos os direitos reservados.</p>
+            </div>
+        </div>
     </footer>
 
+    <!-- Cart Modal (Hidden by default) -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+                <div class="p-6 border-b">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold">Seu Carrinho</h2>
+                        <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="cart-items" class="p-6">
+                    <!-- Cart items will be loaded here -->
+                </div>
+                
+                <div class="p-6 border-t">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-xl font-bold">Total:</span>
+                        <span id="cart-total" class="text-2xl font-bold text-green-600">R$ 0,00</span>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button id="continue-shopping" class="flex-1 btn-primary">Continuar Comprando</button>
+                        <button id="checkout" class="flex-1 btn-secondary">Finalizar Compra</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Dados das cartas de Pokémon com informações de preço e avaliação
+        // Pokemon Cards Data
         const pokemonCards = [
             {
                 id: 1,
-                name: "Charizard",
+                name: "Charizard ex",
                 price: 500.00,
                 rating: 5,
-                image: "https://sm.ign.com/ign_br/screenshot/default/charizard-holo-shadowless-1st_26r6.jpg"
+                image: "https://sm.ign.com/ign_br/screenshot/default/charizard-holo-shadowless-1st_26r6.jpg",
+                rarity: "Ultra Rara"
             },
             {
                 id: 2,
-                name: "Pikachu",
+                name: "Pikachu Illustrator",
                 price: 850.00,
                 rating: 5,
-                image: "https://http2.mlstatic.com/D_NQ_NP_600945-MLB75256685074_032024-O-card-pokemon-1998-pikachu-illustrator-1998-japanese-promo.webp"
+                image: "https://http2.mlstatic.com/D_NQ_NP_600945-MLB75256685074_032024-O-card-pokemon-1998-pikachu-illustrator-1998-japanese-promo.webp",
+                rarity: "Promo"
             },
             {
                 id: 3,
                 name: "Bulbasaur",
                 price: 15.50,
                 rating: 4,
-                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy9oGitKg9V3MT-n5jOwVkJCw6nuSGlRsoIw&s"
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy9oGitKg9V3MT-n5jOwVkJCw6nuSGlRsoIw&s",
+                rarity: "Comum"
             },
             {
                 id: 4,
                 name: "Squirtle",
                 price: 18.75,
                 rating: 4,
-                image: "https://img.mypcards.com/img/2/2158/pokemon_scr_148_142/pokemon_scr_148_142_pt.jpg"
+                image: "https://img.mypcards.com/img/2/2158/pokemon_scr_148_142/pokemon_scr_148_142_pt.jpg",
+                rarity: "Comum"
             },
             {
                 id: 5,
                 name: "Charmander",
                 price: 22.90,
                 rating: 4,
-                image: "https://www.escalaminiaturas.com.br/media/catalog/product/cache/3/image/9df78eab33525d08d6e5fb8d27136e95/c/h/charmander.jpg"
+                image: "https://www.escalaminiaturas.com.br/media/catalog/product/cache/3/image/9df78eab33525d08d6e5fb8d27136e95/c/h/charmander.jpg",
+                rarity: "Comum"
             },
             {
                 id: 6,
-                name: "Zeraora",
+                name: "Zeraora GX",
                 price: 45.00,
                 rating: 3,
-                image: "https://assets.pokemon.com/static-assets/content-assets/cms2-pt-br/img/cards/web/SM8/SM8_PT-BR_86.png"
+                image: "https://assets.pokemon.com/static-assets/content-assets/cms2-pt-br/img/cards/web/SM8/SM8_PT-BR_86.png",
+                rarity: "GX"
             },
             {
                 id: 7,
-                name: "Mew",
+                name: "Mew ex",
                 price: 90.00,
                 rating: 5,
-                image: "https://repositorio.sbrauble.com/arquivos/in/pokemon_bkp/cd/316/5723_054.jpg"
+                image: "https://repositorio.sbrauble.com/arquivos/in/pokemon_bkp/cd/316/5723_054.jpg",
+                rarity: "ex"
             },
             {
                 id: 8,
-                name: "Mewtwo",
+                name: "Mewtwo & Mew GX",
                 price: 120.00,
                 rating: 4,
-                image: "https://sm.ign.com/ign_br/screenshot/default/mewtwo-and-mew-gx-full-art_9u2d.jpg"
-            },
-             {
-                id: 9,
-                name: "Blastoise",
-                price: 150.00,
-                rating: 4,
-                image: "https://http2.mlstatic.com/D_NQ_NP_903964-MLB54593465492_032023-O.webp"
-            },
-             {
-                id: 10,
-                name: "Venusaur",
-                price: 130.00,
-                rating: 4,
-                image: "https://http2.mlstatic.com/D_NQ_NP_881773-MLB70490409949_072023-O.webp"
-            },
-             {
-                id: 11,
-                name: "Lugia",
-                price: 350.00,
-                rating: 5,
-                image: "https://i.ebayimg.com/images/g/9c8AAOSwH05jkJ9x/s-l1200.webp"
-            },
-             {
-                id: 12,
-                name: "Ho-Oh",
-                price: 280.00,
-                rating: 5,
-                image: "https://assets.pokemon.com/static-assets/content-assets/cms2/img/trading-card-game/series/base/cards/base-set_card_2_ho-oh.webp"
-            },
-             {
-                id: 13,
-                name: "Gyarados",
-                price: 75.00,
-                rating: 4,
-                image: "https://http2.mlstatic.com/D_NQ_NP_668350-MLB74052984180_012024-O.webp"
-            },
-             {
-                id: 14,
-                name: "Eevee",
-                price: 25.00,
-                rating: 5,
-                image: "https://http2.mlstatic.com/D_NQ_NP_753826-MLB54655519808_032023-O.webp"
-            },
-            {
-                id: 15,
-                name: "Mewtwo EX",
-                price: 95.00,
-                rating: 4,
-                image: "https://www.pokebeach.com/scans/black-white-promo-cards/bw45-mewtwo-ex-promo.jpg"
-            },
-            {
-                id: 16,
-                name: "Rayquaza GX",
-                price: 250.00,
-                rating: 5,
-                image: "https://img.mypcards.com/img/3/3055/pokemon_scr_100_128/pokemon_scr_100_128_pt.jpg"
-            },
-            {
-                id: 17,
-                name: "Snorlax VMAX",
-                price: 65.00,
-                rating: 4,
-                image: "https://i.ebayimg.com/images/g/oG0AAOSw7F5hT2G9/s-l1200.webp"
-            },
-            {
-                id: 18,
-                name: "Tyranitar V",
-                price: 55.00,
-                rating: 4,
-                image: "https://assets.pokemon.com/assets/cms2-pt-br/img/cards/web/SWSH6/SWSH6_PT-BR_97.png"
+                image: "https://sm.ign.com/ign_br/screenshot/default/mewtwo-and-mew-gx-full-art_9u2d.jpg",
+                rarity: "GX"
             }
         ];
 
-        // Estado global do carrinho e referências de elementos
+        // Cart functionality
         let cart = {};
-        const cardsContainer = document.getElementById('cards-container');
-        const cartItemsList = document.getElementById('cart-items');
-        const cartTotalDisplay = document.getElementById('cart-total');
-        const productListView = document.getElementById('product-list');
-        const cartView = document.getElementById('cart-view');
-        const checkoutView = document.getElementById('checkout-view');
-        const checkoutForm = document.getElementById('checkout-form');
-        const successMessage = document.getElementById('success-message');
-        const searchInput = document.getElementById('search-input');
-        const cartCount = document.getElementById('cart-count');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
+        let currentSlide = 0;
+        const totalSlides = 3;
 
-        // Função para alternar a visibilidade das páginas
-        function showView(viewId) {
-            const views = [productListView, cartView, checkoutView];
-            views.forEach(view => {
-                view.classList.add('hidden');
-            });
-            document.getElementById(viewId).classList.remove('hidden');
-        }
-        
-        // Função para renderizar as estrelas de avaliação
-        function renderStars(rating, cardId) {
-            let starsHtml = '';
-            for (let i = 5; i >= 1; i--) {
-                starsHtml += `
-                    <input type="radio" id="star${cardId}-${i}" name="rating-${cardId}" value="${i}" ${i === rating ? 'checked' : ''} disabled />
-                    <label for="star${cardId}-${i}" title="${i} estrelas">&#9733;</label>
-                `;
-            }
-            return `<div class="rating">${starsHtml}</div>`;
-        }
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            initializeHeroCarousel();
+            initializeMobileMenu();
+            initializeCart();
+            initializeSearch();
+        });
 
-        // Função para renderizar as cartas de Pokémon na página
-        function renderPokemonCards(filterText = '') {
-            cardsContainer.innerHTML = ''; // Limpa o container antes de renderizar
-            const filteredCards = pokemonCards.filter(card =>
-                card.name.toLowerCase().includes(filterText.toLowerCase())
-            );
+        // Load products
+        function loadProducts() {
+            const productsGrid = document.getElementById('products-grid');
+            productsGrid.innerHTML = '';
 
-            if (filteredCards.length === 0) {
-                cardsContainer.innerHTML = '<p class="text-center text-gray-500 col-span-full">Nenhuma carta encontrada.</p>';
-                prevBtn.classList.add('hidden');
-                nextBtn.classList.add('hidden');
-            } else {
-                prevBtn.classList.remove('hidden');
-                nextBtn.classList.remove('hidden');
-            }
-
-            filteredCards.forEach(card => {
-                const cardElement = document.createElement('div');
-                cardElement.className = 'card flex flex-col items-center text-center';
-                cardElement.innerHTML = `
-                    <div class="card-image-container rounded-t-xl overflow-hidden">
-                        <img src="${card.image}" alt="Carta Pokémon ${card.name}" class="card-image">
-                    </div>
-                    <div class="p-4 flex flex-col items-center">
-                        <h3 class="text-xl font-bold mb-1">${card.name}</h3>
-                        ${renderStars(card.rating, card.id)}
-                        <span class="text-2xl font-bold mt-2 text-blue-800">R$ ${card.price.toFixed(2).replace('.', ',')}</span>
-                        <button class="add-to-cart-btn btn-primary py-2 px-4 rounded-full font-bold mt-4" data-id="${card.id}">Adicionar ao Carrinho</button>
-                    </div>
-                `;
-                cardsContainer.appendChild(cardElement);
+            pokemonCards.forEach(card => {
+                const productCard = createProductCard(card);
+                productsGrid.appendChild(productCard);
             });
         }
 
-        // Função para adicionar um item ao carrinho
+        // Create product card
+        function createProductCard(card) {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'product-card';
+            
+            const stars = '★'.repeat(card.rating) + '☆'.repeat(5 - card.rating);
+            
+            cardElement.innerHTML = `
+                <div class="overflow-hidden">
+                    <img src="${card.image}" alt="${card.name}" class="product-image">
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-800">${card.name}</h3>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${card.rarity}</span>
+                    </div>
+                    <div class="rating mb-3">
+                        <span class="text-yellow-400">${stars}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-green-600">R$ ${card.price.toFixed(2).replace('.', ',')}</span>
+                        <button onclick="addToCart(${card.id})" class="btn-primary text-sm">
+                            Adicionar
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return cardElement;
+        }
+
+        // Hero carousel functionality
+        function initializeHeroCarousel() {
+            const slides = document.querySelectorAll('.hero-slide');
+            const dots = document.querySelectorAll('.hero-dot');
+
+            // Auto-advance slides
+            setInterval(() => {
+                nextSlide();
+            }, 5000);
+
+            // Dot navigation
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    goToSlide(index);
+                });
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlide();
+        }
+
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateSlide();
+        }
+
+        function updateSlide() {
+            const slides = document.querySelectorAll('.hero-slide');
+            const dots = document.querySelectorAll('.hero-dot');
+
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        // Mobile menu functionality
+        function initializeMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+            });
+
+            closeMobileMenu.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+
+            // Close menu when clicking on links
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+        }
+
+        // Cart functionality
+        function initializeCart() {
+            const cartBtn = document.getElementById('cart-btn');
+            const cartModal = document.getElementById('cart-modal');
+            const closeCart = document.getElementById('close-cart');
+            const continueShopping = document.getElementById('continue-shopping');
+
+            cartBtn.addEventListener('click', () => {
+                updateCartDisplay();
+                cartModal.classList.remove('hidden');
+            });
+
+            closeCart.addEventListener('click', () => {
+                cartModal.classList.add('hidden');
+            });
+
+            continueShopping.addEventListener('click', () => {
+                cartModal.classList.add('hidden');
+            });
+
+            // Close modal when clicking outside
+            cartModal.addEventListener('click', (e) => {
+                if (e.target === cartModal) {
+                    cartModal.classList.add('hidden');
+                }
+            });
+        }
+
         function addToCart(cardId) {
-            const cardToAdd = pokemonCards.find(card => card.id === parseInt(cardId));
-            if (cardToAdd) {
+            const card = pokemonCards.find(c => c.id === cardId);
+            if (card) {
                 if (cart[cardId]) {
                     cart[cardId].quantity++;
                 } else {
-                    cart[cardId] = { ...cardToAdd, quantity: 1 };
+                    cart[cardId] = { ...card, quantity: 1 };
                 }
                 updateCartCount();
-                renderCart();
+                showNotification(`${card.name} adicionado ao carrinho!`);
             }
         }
 
-        // Função para remover um item do carrinho
         function removeFromCart(cardId) {
             delete cart[cardId];
             updateCartCount();
-            renderCart();
+            updateCartDisplay();
         }
 
-        // Função para atualizar a quantidade de um item no carrinho
-        function updateCartQuantity(cardId, change) {
+        function updateQuantity(cardId, change) {
             if (cart[cardId]) {
                 cart[cardId].quantity += change;
                 if (cart[cardId].quantity <= 0) {
                     removeFromCart(cardId);
                 } else {
-                    renderCart();
+                    updateCartCount();
+                    updateCartDisplay();
                 }
             }
-            updateCartCount();
         }
 
-        // Função para renderizar o carrinho de compras
-        function renderCart() {
-            cartItemsList.innerHTML = '';
-            let total = 0;
-            const items = Object.values(cart);
-            if (items.length === 0) {
-                cartItemsList.innerHTML = '<p class="text-center text-gray-500">Seu carrinho está vazio.</p>';
-            } else {
-                items.forEach(item => {
-                    const itemTotal = item.price * item.quantity;
-                    total += itemTotal;
-                    const itemElement = document.createElement('div');
-                    itemElement.className = 'flex flex-col sm:flex-row justify-between items-center py-2 border-b last:border-b-0';
-                    itemElement.innerHTML = `
-                        <div class="flex items-center gap-4">
-                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-md object-cover">
-                            <div>
-                                <h3 class="font-bold">${item.name}</h3>
-                                <p class="text-gray-600">Preço: R$ ${item.price.toFixed(2).replace('.', ',')}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 mt-2 sm:mt-0">
-                            <button class="quantity-btn text-blue-500 hover:text-blue-700 font-bold text-xl" data-id="${item.id}" data-change="-1">-</button>
-                            <span class="font-bold">${item.quantity}</span>
-                            <button class="quantity-btn text-blue-500 hover:text-blue-700 font-bold text-xl" data-id="${item.id}" data-change="1">+</button>
-                            <span class="font-bold ml-4">R$ ${itemTotal.toFixed(2).replace('.', ',')}</span>
-                            <button class="remove-from-cart-btn text-red-500 hover:text-red-700 font-bold" data-id="${item.id}">Remover</button>
-                        </div>
-                    `;
-                    cartItemsList.appendChild(itemElement);
-                });
-            }
-            cartTotalDisplay.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-        }
-        
-        // Função para atualizar a contagem de itens no carrinho
         function updateCartCount() {
             const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = count;
+            document.getElementById('cart-count').textContent = count;
         }
 
-        // Função para exibir um modal de mensagem personalizado
-        function showMessageModal(message, type = 'info') {
-            const modal = document.createElement('div');
-            modal.classList.add('fixed', 'inset-0', 'bg-gray-600', 'bg-opacity-50', 'flex', 'items-center', 'justify-center', 'z-50');
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
             
-            const modalContent = document.createElement('div');
-            modalContent.classList.add('message-modal', 'p-6', 'rounded-xl', 'shadow-lg', 'text-center', 'w-11/12', 'sm:w-1/2', 'lg:w-1/3');
-            
-            let color = 'text-blue-500';
-            if (type === 'error') {
-                color = 'text-red-500';
-            } else if (type === 'success') {
-                color = 'text-green-500';
+            if (Object.keys(cart).length === 0) {
+                cartItems.innerHTML = '<p class="text-center text-gray-500 py-8">Seu carrinho está vazio</p>';
+                cartTotal.textContent = 'R$ 0,00';
+                return;
             }
 
-            modalContent.innerHTML = `
-                <h3 class="text-2xl font-bold mb-4 ${color}">Aviso</h3>
-                <p class="text-gray-700 mb-4">${message}</p>
-                <button class="btn-primary py-2 px-6 rounded-full font-bold" onclick="this.parentElement.parentElement.remove()">Fechar</button>
-            `;
-            
-            modal.appendChild(modalContent);
-            document.body.appendChild(modal);
+            let total = 0;
+            cartItems.innerHTML = '';
+
+            Object.values(cart).forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+
+                const cartItem = document.createElement('div');
+                cartItem.className = 'flex items-center justify-between py-4 border-b last:border-b-0';
+                cartItem.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
+                        <div>
+                            <h4 class="font-bold">${item.name}</h4>
+                            <p class="text-gray-600">R$ ${item.price.toFixed(2).replace('.', ',')}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="updateQuantity(${item.id}, -1)" class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300">-</button>
+                        <span class="font-bold">${item.quantity}</span>
+                        <button onclick="updateQuantity(${item.id}, 1)" class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300">+</button>
+                        <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700 ml-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+
+            cartTotal.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
         }
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            renderPokemonCards();
+        // Search functionality
+        function initializeSearch() {
+            const searchInputs = document.querySelectorAll('#search-input, input[placeholder="Buscar cartas..."]');
             
-            // Adiciona evento de clique para os botões "Adicionar ao Carrinho"
-            cardsContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('add-to-cart-btn')) {
-                    const cardId = e.target.getAttribute('data-id');
-                    addToCart(cardId);
-                }
+            searchInputs.forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    filterProducts(query);
+                });
             });
+        }
 
-            // Adiciona evento de clique para o botão de busca
-            searchInput.addEventListener('input', (e) => {
-                const query = e.target.value;
-                renderPokemonCards(query);
-            });
+        function filterProducts(query) {
+            const filteredCards = pokemonCards.filter(card => 
+                card.name.toLowerCase().includes(query) ||
+                card.rarity.toLowerCase().includes(query)
+            );
+            
+            const productsGrid = document.getElementById('products-grid');
+            productsGrid.innerHTML = '';
 
-            // Adiciona evento de clique para o botão do carrinho
-            document.getElementById('cart-btn').addEventListener('click', () => {
-                renderCart();
-                showView('cart-view');
-            });
+            if (filteredCards.length === 0) {
+                productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500">Nenhuma carta encontrada</div>';
+                return;
+            }
 
-            // Adiciona evento de clique para os botões "Remover" e de quantidade
-            cartItemsList.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remove-from-cart-btn')) {
-                    const cardId = e.target.getAttribute('data-id');
-                    removeFromCart(cardId);
-                }
-                if (e.target.classList.contains('quantity-btn')) {
-                    const cardId = e.target.getAttribute('data-id');
-                    const change = parseInt(e.target.getAttribute('data-change'));
-                    updateCartQuantity(cardId, change);
-                }
+            filteredCards.forEach(card => {
+                const productCard = createProductCard(card);
+                productsGrid.appendChild(productCard);
             });
+        }
 
-            // Adiciona evento de clique para os botões de navegação do carrossel
-            prevBtn.addEventListener('click', () => {
-                cardsContainer.scrollBy({ left: -350, behavior: 'smooth' });
-            });
-            nextBtn.addEventListener('click', () => {
-                cardsContainer.scrollBy({ left: 350, behavior: 'smooth' });
-            });
+        // Notification system
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
 
-            // Adiciona evento de clique para o botão "Finalizar Compra"
-            document.getElementById('checkout-btn').addEventListener('click', () => {
-                // Checa se o carrinho está vazio antes de ir para o checkout
-                if (Object.keys(cart).length === 0) {
-                     showMessageModal("Seu carrinho está vazio. Por favor, adicione itens antes de finalizar a compra.", 'error');
-                     return;
-                }
-                showView('checkout-view');
-            });
-
-            // Adiciona evento de clique para o botão "Voltar para Compras" no carrinho
-            document.getElementById('back-to-shop-btn').addEventListener('click', () => {
-                showView('product-list');
-            });
-
-            // Adiciona evento de clique para o botão "Voltar" no checkout
-            document.getElementById('back-to-cart-btn').addEventListener('click', () => {
-                showView('cart-view');
-            });
-
-            // Evento de submissão do formulário de checkout
-            checkoutForm.addEventListener('submit', (e) => {
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                // Simula uma transação bem-sucedida
-                checkoutForm.classList.add('hidden');
-                successMessage.classList.remove('hidden');
-                cart = {}; // Limpa o carrinho
-                renderCart(); // Renderiza o carrinho vazio
-                updateCartCount();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
             });
         });
     </script>
-</body>
-</html>
-
 </body>
 </html>
